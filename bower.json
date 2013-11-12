@@ -1,0 +1,5 @@
+{
+  "name": "responsive-comments",
+  "version": "1.0.0",
+  "main": ["responsive-comments.js"]
+}
