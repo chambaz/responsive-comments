@@ -31,6 +31,11 @@ You can also bind to an event, fired on the element containing the `[data-respon
 	    // do something crazy
 	});
 	
+
+## Support
+
+ResponsiveComments is supported across all major web browsers. However, we make use of the [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window.matchMedia) function for testing media queries, this function is fully supported in Internet Explorer 10, but version 9 and down require a [polyfil](https://github.com/paulirish/matchMedia.js/).
+	
 ResponsiveComments was designed and developed with love at [Digital Surgeons](http://www.digitalsurgeons.com/).
 
 **MIT Open Source License**
