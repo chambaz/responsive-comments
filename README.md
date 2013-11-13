@@ -1,6 +1,6 @@
 # Responsive Comments
 
-Responsive Comments were designed to bring simple conditional loading to the client site. Through the use of HTML comments, markup can be introduced to progressively enhance an experience as various media queries evaluate to true.
+ResponsiveComments was designed to bring simple conditional loading to the client side. Through the use of HTML comments, markup can be introduced to progressively enhance an experience as various media queries evaluate to true. For more information and examples check out [responsivecomments.com](http://responsivecomments.com).
 
 ## Installation
 
@@ -25,7 +25,13 @@ The commented out markup will be insert into the DOM when the specified media qu
 		<-- <div><p>Any content can go in here, including images</p></div> -->
 	</div>
 	
-ResponsiveComments were designed and developed with love at [Digital Surgeons](http://www.digitalsurgeons.com/).
+You can also bind to an event, fired on the element containing the `[data-responsive-comment-media]` attribute, for added functionality. Use jQuery if you wish or good old vanilla JavaScript.
+
+	document.getElementById('respcomm').addEventListener('responsiveComment', function(e) {
+	    // do something crazy
+	});
+	
+ResponsiveComments was designed and developed with love at [Digital Surgeons](http://www.digitalsurgeons.com/).
 
 **MIT Open Source License**
 
