@@ -99,7 +99,7 @@
 
 		// fire on resize and now
 		window.addEventListener('resize', testNodes.bind(els));
-		testNodes.apply(els);
+		window.addEventListener('load', testNodes.bind(els));
 	});
 
 })();
