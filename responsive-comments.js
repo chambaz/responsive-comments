@@ -2,6 +2,7 @@
 * Responsive Comments
 * -------------------
 * A client-side solution to conditional loading in #RWD
+* http://responsivecomments.com/
 *
 * @author Adam Chambers (@chambaz)
 * @author Digital Surgeons (@digitalsurgeons)
@@ -21,9 +22,9 @@
 		var i = 0, l = nodes.length, mqs = [], el, ins, obj;
 		for(; i < l; i++) {
 			el = nodes[i];
-			// store element, media query / support test and insert type
 			// beforeend default insert type
 			ins = el.getAttribute(attrs.insert) || 'beforeend';
+			// store element, insert type, media query / support test
 			obj = {
 				'element' : el,
 				'insert' : ins,
@@ -36,8 +37,9 @@
 		return mqs;
 	}
 
-	// test supports and media nodes, passing object to required function
+	// call required function (media/supports) on each array element
 	function testNodes(type) {
+		// if type present first argument is event object
 		type = typeof type === 'string' ? type : false;
 		this.forEach(function(x) {
 			if((type === 'supports' || !type) && x.supports) {
@@ -48,10 +50,14 @@
 		});
 	}
 
+	// test media query nodes, requires matchMedia
 	function testMediaNodes() {
+		// matchMedia and media query itself required
 		if(!this.media || !window.matchMedia) {
 			return;
 		}
+
+		// media query passes and attribute not already set to complete
 		if(window.matchMedia(this.media).matches &&
 			this.element.getAttribute(attrs.media) !== 'complete') {
 			childNodes.apply(this);
@@ -61,10 +67,14 @@
 		return;
 	}
 
+	// test media query nodes, requires matchMedia
 	function testSupportNodes() {
+		// Modernizr and test required
 		if(!this.supports || !Modernizr) {
 			return;
 		}
+
+		// Modernizr test passes and attribute not already set to complete
 		if(Modernizr[this.supports] &&
 			this.element.getAttribute(attrs.support) !== 'complete') {
 			childNodes.apply(this);
@@ -85,6 +95,13 @@
 				insertComment.apply(this, [i]);
 			}
 		}
+	}
+
+	// insert commented content into DOM, mark as complete and trigger event
+	function insertComment(index) {
+		this.element.insertAdjacentHTML(this.insert, this.element.childNodes[index].textContent);
+		this.element.setAttribute(attrs.media, 'complete');
+		dispatchEvent.apply(this);
 	}
 
 	// dispatch CustomEvent if supported with media query and insert type detail
@@ -113,13 +130,6 @@
 		this.element.dispatchEvent(ev);
 	}
 
-	// insert commented content into DOM, mark as complete and trigger event
-	function insertComment(index) {
-		this.element.insertAdjacentHTML(this.insert, this.element.childNodes[index].textContent);
-		this.element.setAttribute(attrs.media, 'complete');
-		dispatchEvent.apply(this);
-	}
-
 	// initiate when DOM ready
 	document.addEventListener("DOMContentLoaded", function(event) {
 		// find and cache responsive comments nodes
@@ -127,8 +137,9 @@
 			document.querySelectorAll('['+attrs.media+'],['+attrs.supports+']')
 		);
 
-		// fire on resize and now
+		// test media nodes only on resize
 		window.addEventListener('resize', testNodes.bind(els, 'media'));
+		// test media and support nodes on load
 		window.addEventListener('load', testNodes.bind(els));
 	});
 
