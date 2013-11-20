@@ -12,23 +12,26 @@
 	// data attributes
 	var attrs = {
 		'media' : 'data-responsive-comment-media',
+		'supports' : 'data-responsive-comment-supports',
 		'insert' : 'data-responsive-comment-insert'
 	};
 
 	// cache responsive comments nodes and data
 	function prepNodes(nodes) {
-		var i = 0, l = nodes.length, mqs = [], el, ins;
+		var i = 0, l = nodes.length, mqs = [], el, ins, obj;
 		for(; i < l; i++) {
 			el = nodes[i];
-			ins = el.getAttribute(attrs.insert);
-
-			// store element, media query and insert type
+			// store element, media query / support test and insert type
 			// beforeend default insert type
-			mqs.push({
+			ins = el.getAttribute(attrs.insert) || 'beforeend';
+			obj = {
 				'element' : el,
-				'media' : el.getAttribute(attrs.media),
-				'insert' : ins ? ins : 'beforeend'
-			});
+				'insert' : ins,
+				'media' :  el.getAttribute(attrs.media) || false,
+				'supports' :  el.getAttribute(attrs.supports) || false
+			};
+
+			mqs.push(obj);
 		}
 		return mqs;
 	}
@@ -95,7 +98,9 @@
 	// initiate when DOM ready
 	document.addEventListener("DOMContentLoaded", function(event) {
 		// find and cache responsive comments nodes
-		var els = prepNodes(document.querySelectorAll('['+attrs.media+']'));
+		var els = prepNodes(
+			document.querySelectorAll('['+attrs.media+'],['+attrs.supports+']')
+		);
 
 		// fire on resize and now
 		window.addEventListener('resize', testNodes.bind(els));
