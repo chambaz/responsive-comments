@@ -36,17 +36,42 @@
 		return mqs;
 	}
 
-	// loop round each cached node, check not complete and test media query
-	function testNodes() {
+	// test supports and media nodes, passing object to required function
+	function testNodes(type) {
+		type = typeof type === 'string' ? type : false;
 		this.forEach(function(x) {
-			// media query fails or already complete
-			if(!window.matchMedia(x.media).matches ||
-				x.element.getAttribute(attrs.media) === 'complete') {
-				return;
+			if((type === 'supports' || !type) && x.supports) {
+				testSupportNodes.apply(x);
+			} else if((type === 'media' || !type) && x.media) {
+				testMediaNodes.apply(x);
 			}
-
-			childNodes.apply(x);
 		});
+	}
+
+	function testMediaNodes() {
+		if(!this.media || !window.matchMedia) {
+			return;
+		}
+		if(window.matchMedia(this.media).matches &&
+			this.element.getAttribute(attrs.media) !== 'complete') {
+			childNodes.apply(this);
+			return;
+		}
+
+		return;
+	}
+
+	function testSupportNodes() {
+		if(!this.supports || !Modernizr) {
+			return;
+		}
+		if(Modernizr[this.supports] &&
+			this.element.getAttribute(attrs.support) !== 'complete') {
+			childNodes.apply(this);
+			return;
+		}
+
+		return;
 	}
 
 	// loop round child nodes, find commented content
@@ -103,7 +128,7 @@
 		);
 
 		// fire on resize and now
-		window.addEventListener('resize', testNodes.bind(els));
+		window.addEventListener('resize', testNodes.bind(els, 'media'));
 		window.addEventListener('load', testNodes.bind(els));
 	});
 
