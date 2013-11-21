@@ -13,7 +13,7 @@ To get started using ResponsiveComments, add a `[data-responsive-comment-media]`
 
 	<div data-responsive-comment-media="(min-width: 769px)">...</div>
 	
-The `[data-responsive-comment-media]` containers should contain one commented out segment of markup as well as any other HTML they require.
+The `[data-responsive-comment-media]` containers should contain one commented-out segment of markup as well as any other HTML they require.
 
 	<div data-responsive-comment-media="(min-width: 769px)">
 		<-- <div><p>Any content can go in here</p></div> -->
@@ -31,7 +31,7 @@ The `[data-responsive-comment-supports]` containers should also contain one comm
 	
 ### DOM Insertion
 
-The commented out markup inside the ResponsiveComments container will be inserted into the DOM when the specified media query or feature detection passes. Any valid insertAdjacentHTML insertion type can be specified in `[data-responsive-comment-insert]`, valid options are `beforebegin`, `afterbegin`, `beforeend`, `afterend` with a default of `beforeend`.
+The commented out markup inside the ResponsiveComments container will be inserted into the DOM when the specified media query or feature detection passes. Any valid [insertAdjacentHTML](https://developer.mozilla.org/en-US/docs/Web/API/Element.insertAdjacentHTML) insertion type can be specified in `[data-responsive-comment-insert]`, valid options are `beforebegin`, `afterbegin`, `beforeend`, `afterend` with a default of `beforeend`.
 
 	<div data-responsive-comment-insert="afterbegin"
 	     data-responsive-comment-media="(min-width: 769px)">
@@ -49,7 +49,7 @@ You can also bind to an event, fired on the element containing the `[data-respon
 
 ## Support
 
-ResponsiveComments is supported across all major web browsers. However, we make use of the [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window.matchMedia) function for testing media queries, this function is fully supported in Internet Explorer 10, but version 9 and down require a [polyfil](https://github.com/paulirish/matchMedia.js/). ResponsiveComments also requires [Modernizr](http://modernizr.com/) for feature detection so ensure a Modernizr build is included with all the required tests.
+ResponsiveComments is supported across all major web browsers. However, we make use of the [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window.matchMedia) function for testing media queries, this function is fully supported in Internet Explorer 10, but version 9 and down require a [polyfill](https://github.com/paulirish/matchMedia.js/). ResponsiveComments also requires [Modernizr](http://modernizr.com/) for feature detection so ensure a Modernizr build is included with all the required tests.
 	
 **ResponsiveComments** was designed and developed with love at [Digital Surgeons](http://www.digitalsurgeons.com/).
 
