@@ -4,48 +4,59 @@ ResponsiveComments was designed to bring simple conditional loading to the clien
 
 ## Installation
 
-	$ bower install --save responsive-comments
-	
+```cli
+$ bower install --save responsive-comments
+```
+
 ## Usage
 ### Media Queries
 
 To get started using ResponsiveComments, add a `[data-responsive-comment-media]` attribute containing a valid media query to any element containing children that you wish to conditionally load. The ResponsiveComments concept will only work in a progressivelty enhanced experience so make sure you use minimum width media queries.
 
-	<div data-responsive-comment-media="(min-width: 769px)">...</div>
+```html
+<div data-responsive-comment-media="(min-width: 769px)">...</div>
+```
 	
 The `[data-responsive-comment-media]` containers should contain one commented out segment of markup as well as any other HTML they require.
 
-	<div data-responsive-comment-media="(min-width: 769px)">
-		<-- <div><p>Any content can go in here</p></div> -->
-	</div>
-	
+```html
+<div data-responsive-comment-media="(min-width: 769px)">
+	<-- <div><p>Any content can go in here</p></div> -->
+</div>
+```
+
 ### Feature Detection
 	
 ResponsiveComments also supports feature detection using [Modernizr](http://modernizr.com/). Make sure you include a Modernizr build with all the tests you need before the ResponsiveComments library. A Modernizr test can then be specified in `[data-responsive-comments-supports]`.
 
-	<div data-responsive-comment-supports="svg">
-		<-- <div><p>Any content can go in here, including images</p></div> -->
-	</div>
-	
+```html
+<div data-responsive-comment-supports="svg">
+	<-- <div><p>Any content can go in here, including images</p></div> -->
+</div>
+```
+
 The `[data-responsive-comment-supports]` containers should also contain one commented out segment of markup as well as any other HTML they require.
 	
 ### DOM Insertion
 
 The commented out markup inside the ResponsiveComments container will be inserted into the DOM when the specified media query or feature detection passes. Any valid insertAdjacentHTML insertion type can be specified in `[data-responsive-comment-insert]`, valid options are `beforebegin`, `afterbegin`, `beforeend`, `afterend` with a default of `beforeend`.
 
-	<div data-responsive-comment-insert="afterbegin"
-	     data-responsive-comment-media="(min-width: 769px)">
-		<-- <div><p>Any content can go in here, including images</p></div> -->
-	</div>
-	
+```html
+<div data-responsive-comment-insert="afterbegin"
+     data-responsive-comment-media="(min-width: 769px)">
+	<-- <div><p>Any content can go in here, including images</p></div> -->
+</div>
+```
+
 ### Events
 	
 You can also bind to an event, fired on the element containing the `[data-responsive-comment-media]` attribute, for added functionality. Use jQuery if you wish or good old vanilla JavaScript.
 
-	document.getElementById('respcomm').addEventListener('responsiveComment', function(e) {
-	    // do something crazy
-	});
-	
+```js
+document.getElementById('respcomm').addEventListener('responsiveComment', function(e) {
+    // do something crazy
+});
+```
 
 ## Support
 
