@@ -71,33 +71,31 @@
 
 	// test media query nodes, requires matchMedia
 	function testSupportNodes() {
-		// Modernizr and test required
-		if(!this.supports || !Modernizr) {
+		// Modernizr and tests required
+		if(!this.supports || !Modernizr ||
+			// test already been carried out
+			this.element.getAttribute(attrs.support) === 'complete') {
 			return;
 		}
 
-		// split multiple features at ,
-		var supps = this.supports.split(',');
-
-		// we have multiple features to detect
-		if(supps.length > 1) {
-			// multiple Modernizr tests pass and attribute not already set to complete
-			if(multiFeatureDetection(supps) &&
-				this.element.getAttribute(attrs.support) !== 'complete') {
-				childNodes.apply(this);
-				return;
-			}
-		// only the single feature to detect
-		} else {
-			// Modernizr test passes and attribute not already set to complete
-			if(Modernizr[this.supports] &&
-				this.element.getAttribute(attrs.support) !== 'complete') {
-				childNodes.apply(this);
-				return;
-			}
+		if(featureDetection(this.supports.split(','))) {
+			childNodes.apply(this);
+			return;
 		}
 
 		return;
+	}
+
+	// handle Modernir feature detection
+	// if multiple features hand off to multiFeatureDetection
+	function featureDetection(features) {
+		// multiple feature detections
+		if(features.length > 1) {
+			return multiFeatureDetection(features);
+		}
+
+		// single feature detection
+		return Modernizr[features];
 	}
 
 	// handle multiple modernizr feature detections
