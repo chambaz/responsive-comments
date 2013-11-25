@@ -32,6 +32,8 @@
 				'supports' :  el.getAttribute(attrs.supports) || false
 			};
 
+			console.log(obj);
+
 			mqs.push(obj);
 		}
 		return mqs;
@@ -69,19 +71,42 @@
 
 	// test media query nodes, requires matchMedia
 	function testSupportNodes() {
-		// Modernizr and test required
-		if(!this.supports || !Modernizr) {
+		// Modernizr and tests required
+		if(!this.supports || !Modernizr ||
+			// test already been carried out
+			this.element.getAttribute(attrs.support) === 'complete') {
 			return;
 		}
 
-		// Modernizr test passes and attribute not already set to complete
-		if(Modernizr[this.supports] &&
-			this.element.getAttribute(attrs.support) !== 'complete') {
+		if(featureDetection(this.supports.split(','))) {
 			childNodes.apply(this);
 			return;
 		}
 
 		return;
+	}
+
+	// handle Modernir feature detection
+	// if multiple features hand off to multiFeatureDetection
+	function featureDetection(features) {
+		// multiple feature detections
+		if(features.length > 1) {
+			return multiFeatureDetection(features);
+		}
+
+		// single feature detection
+		return Modernizr[features];
+	}
+
+	// handle multiple modernizr feature detections
+	function multiFeatureDetection(features) {
+		var passed = true;
+		features.forEach(function(feature) {
+			if(!Modernizr[feature]) {
+				passed = false;
+			}
+		});
+		return passed;
 	}
 
 	// loop round child nodes, find commented content
