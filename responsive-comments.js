@@ -32,6 +32,8 @@
 				'supports' :  el.getAttribute(attrs.supports) || false
 			};
 
+			console.log(obj);
+
 			mqs.push(obj);
 		}
 		return mqs;
@@ -74,14 +76,39 @@
 			return;
 		}
 
-		// Modernizr test passes and attribute not already set to complete
-		if(Modernizr[this.supports] &&
-			this.element.getAttribute(attrs.support) !== 'complete') {
-			childNodes.apply(this);
-			return;
+		// split multiple features at ,
+		var supps = this.supports.split(',');
+
+		// we have multiple features to detect
+		if(supps.length > 1) {
+			// multiple Modernizr tests pass and attribute not already set to complete
+			if(multiFeatureDetection(supps) &&
+				this.element.getAttribute(attrs.support) !== 'complete') {
+				childNodes.apply(this);
+				return;
+			}
+		// only the single feature to detect
+		} else {
+			// Modernizr test passes and attribute not already set to complete
+			if(Modernizr[this.supports] &&
+				this.element.getAttribute(attrs.support) !== 'complete') {
+				childNodes.apply(this);
+				return;
+			}
 		}
 
 		return;
+	}
+
+	// handle multiple modernizr feature detections
+	function multiFeatureDetection(features) {
+		var passed = true;
+		features.forEach(function(feature) {
+			if(!Modernizr[feature]) {
+				passed = false;
+			}
+		});
+		return passed;
 	}
 
 	// loop round child nodes, find commented content
