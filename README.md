@@ -27,7 +27,7 @@ The `[data-responsive-comment-media]` containers should contain one commented-ou
 
 ### Feature Detection
 
-ResponsiveComments also supports feature detection using [Modernizr](http://modernizr.com/). Make sure you include a Modernizr build with all the tests you need before the ResponsiveComments library. A Modernizr test can then be specified in `[data-responsive-comments-supports]`.
+ResponsiveComments also supports feature detection using [Modernizr](http://modernizr.com/). Make sure you include a Modernizr build with all the tests you need before the ResponsiveComments library. A Modernizr test, or a comma separated list of multiple Modernizr tests, can then be specified in `[data-responsive-comments-supports]`.
 
 ```html
 <div data-responsive-comment-supports="svg">
