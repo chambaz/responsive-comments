@@ -32,8 +32,6 @@
 				'supports' :  el.getAttribute(attrs.supports) || false
 			};
 
-			console.log(obj);
-
 			mqs.push(obj);
 		}
 		return mqs;
