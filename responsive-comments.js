@@ -39,12 +39,18 @@
 
 	// call required function (media/supports) on each array element
 	function testNodes(type) {
-		// if type present first argument is event object
 		type = typeof type === 'string' ? type : false;
+
+		// test support/media query nodes if not already tested and completed
 		this.forEach(function(x) {
-			if((type === 'supports' || !type) && x.supports) {
+			if((type === 'supports' || !type) && Modernizr && x.supports &&
+				x.supports !== 'complete' && x.supports !== 'failed') {
+
 				testSupportNodes.apply(x);
-			} else if((type === 'media' || !type) && x.media) {
+			}
+			if((type === 'media' || !type) && window.matchMedia && x.media &&
+				x.media !== 'complete') {
+
 				testMediaNodes.apply(x);
 			}
 		});
@@ -52,36 +58,39 @@
 
 	// test media query nodes, requires matchMedia
 	function testMediaNodes() {
-		// matchMedia and media query itself required
-		if(!this.media || !window.matchMedia) {
-			return;
+		// this node had a feature detection that failed so end tests now
+		if(this.supports === 'failed') {
+			this.media = 'complete';
+			return false;
 		}
 
 		// media query passes and attribute not already set to complete
-		if(window.matchMedia(this.media).matches &&
-			this.element.getAttribute(attrs.media) !== 'complete') {
+		if(window.matchMedia(this.media).matches) {
+			this.media = 'complete';
 			childNodes.apply(this);
-			return;
+			return true;
 		}
 
-		return;
+		return false;
 	}
 
-	// test media query nodes, requires matchMedia
+	// test feature detection nodes, requires Modernizr
 	function testSupportNodes() {
-		// Modernizr and tests required
-		if(!this.supports || !Modernizr ||
-			// test already been carried out
-			this.element.getAttribute(attrs.support) === 'complete') {
-			return;
-		}
-
+		// feature detection passed
 		if(featureDetection(this.supports.split(','))) {
-			childNodes.apply(this);
-			return;
+			this.supports = 'complete';
+
+			// no media query to test so insert comment into DOM
+			if(!this.media) {
+				childNodes.apply(this);
+			}
+
+			return true;
 		}
 
-		return;
+		// set feature detection state to failed
+		this.supports = 'failed';
+		return false;
 	}
 
 	// handle Modernir feature detection
@@ -123,7 +132,6 @@
 	// insert commented content into DOM, mark as complete and trigger event
 	function insertComment(index) {
 		this.element.insertAdjacentHTML(this.insert, this.element.childNodes[index].textContent);
-		this.element.setAttribute(attrs.media, 'complete');
 		dispatchEvent.apply(this);
 	}
 
