@@ -44,6 +44,8 @@
 		this.forEach(function(x) {
 			if((type === 'supports' || !type) && x.supports) {
 				testSupportNodes.apply(x);
+
+			// if media node has a failed feature detection then do not run
 			} else if((type === 'media' || !type) && x.media) {
 				testMediaNodes.apply(x);
 			}
@@ -57,14 +59,22 @@
 			return;
 		}
 
+		// this node had a feature detection that failed so end tests now
+		if(this.element.getAttribute(attrs.supports) === 'failed') {
+			this.element.setAttribute(attrs.media, 'complete');
+			return false;
+		}
+
 		// media query passes and attribute not already set to complete
 		if(window.matchMedia(this.media).matches &&
 			this.element.getAttribute(attrs.media) !== 'complete') {
+
+			this.element.setAttribute(attrs.media, 'complete');
 			childNodes.apply(this);
-			return;
+			return true;
 		}
 
-		return;
+		return false;
 	}
 
 	// test media query nodes, requires matchMedia
@@ -72,16 +82,24 @@
 		// Modernizr and tests required
 		if(!this.supports || !Modernizr ||
 			// test already been carried out
-			this.element.getAttribute(attrs.support) === 'complete') {
+			this.element.getAttribute(attrs.supports) === 'complete') {
 			return;
 		}
 
+		// feature detection passed
 		if(featureDetection(this.supports.split(','))) {
-			childNodes.apply(this);
-			return;
+			this.element.setAttribute(attrs.supports, 'complete');
+			// if we also have a media query to test do not insert
+			if(!this.media) {
+				childNodes.apply(this);
+			}
+
+			return true;
 		}
 
-		return;
+		// set feature detection state to failed
+		this.element.setAttribute(attrs.supports, 'failed');
+		return false;
 	}
 
 	// handle Modernir feature detection
@@ -123,7 +141,6 @@
 	// insert commented content into DOM, mark as complete and trigger event
 	function insertComment(index) {
 		this.element.insertAdjacentHTML(this.insert, this.element.childNodes[index].textContent);
-		this.element.setAttribute(attrs.media, 'complete');
 		dispatchEvent.apply(this);
 	}
 
