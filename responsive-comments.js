@@ -44,9 +44,8 @@
 		this.forEach(function(x) {
 			if((type === 'supports' || !type) && x.supports) {
 				testSupportNodes.apply(x);
-
-			// if media node has a failed feature detection then do not run
-			} else if((type === 'media' || !type) && x.media) {
+			}
+			if((type === 'media' || !type) && x.media) {
 				testMediaNodes.apply(x);
 			}
 		});
@@ -55,21 +54,19 @@
 	// test media query nodes, requires matchMedia
 	function testMediaNodes() {
 		// matchMedia and media query itself required
-		if(!this.media || !window.matchMedia) {
+		if(!this.media || this.media === 'complete' || !window.matchMedia) {
 			return;
 		}
 
 		// this node had a feature detection that failed so end tests now
-		if(this.element.getAttribute(attrs.supports) === 'failed') {
-			this.element.setAttribute(attrs.media, 'complete');
+		if(this.supports === 'failed') {
+			this.media = 'complete';
 			return false;
 		}
 
 		// media query passes and attribute not already set to complete
-		if(window.matchMedia(this.media).matches &&
-			this.element.getAttribute(attrs.media) !== 'complete') {
-
-			this.element.setAttribute(attrs.media, 'complete');
+		if(window.matchMedia(this.media).matches) {
+			this.media = 'complete';
 			childNodes.apply(this);
 			return true;
 		}
@@ -80,16 +77,17 @@
 	// test media query nodes, requires matchMedia
 	function testSupportNodes() {
 		// Modernizr and tests required
-		if(!this.supports || !Modernizr ||
-			// test already been carried out
-			this.element.getAttribute(attrs.supports) === 'complete') {
+		if(!this.supports || this.supports === 'complete' ||
+			this.supports === 'falied' || !Modernizr) {
+
 			return;
 		}
 
 		// feature detection passed
 		if(featureDetection(this.supports.split(','))) {
-			this.element.setAttribute(attrs.supports, 'complete');
-			// if we also have a media query to test do not insert
+			this.supports = 'complete';
+
+			// no media query to test so insert comment into DOM
 			if(!this.media) {
 				childNodes.apply(this);
 			}
@@ -98,7 +96,7 @@
 		}
 
 		// set feature detection state to failed
-		this.element.setAttribute(attrs.supports, 'failed');
+		this.supports = 'failed';
 		return false;
 	}
 
