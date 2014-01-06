@@ -39,13 +39,18 @@
 
 	// call required function (media/supports) on each array element
 	function testNodes(type) {
-		// if type present first argument is event object
 		type = typeof type === 'string' ? type : false;
+
+		// test support/media query nodes if not already tested and completed
 		this.forEach(function(x) {
-			if((type === 'supports' || !type) && x.supports) {
+			if((type === 'supports' || !type) && Modernizr && x.supports &&
+				x.supports !== 'complete' && x.supports !== 'failed') {
+
 				testSupportNodes.apply(x);
 			}
-			if((type === 'media' || !type) && x.media) {
+			if((type === 'media' || !type) && window.matchMedia && x.media &&
+				x.media !== 'complete') {
+
 				testMediaNodes.apply(x);
 			}
 		});
@@ -53,11 +58,6 @@
 
 	// test media query nodes, requires matchMedia
 	function testMediaNodes() {
-		// matchMedia and media query itself required
-		if(!this.media || this.media === 'complete' || !window.matchMedia) {
-			return;
-		}
-
 		// this node had a feature detection that failed so end tests now
 		if(this.supports === 'failed') {
 			this.media = 'complete';
@@ -74,15 +74,8 @@
 		return false;
 	}
 
-	// test media query nodes, requires matchMedia
+	// test feature detection nodes, requires Modernizr
 	function testSupportNodes() {
-		// Modernizr and tests required
-		if(!this.supports || this.supports === 'complete' ||
-			this.supports === 'falied' || !Modernizr) {
-
-			return;
-		}
-
 		// feature detection passed
 		if(featureDetection(this.supports.split(','))) {
 			this.supports = 'complete';
